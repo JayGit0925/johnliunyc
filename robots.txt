@@ -1,0 +1,41 @@
+# robots.txt — johnliunyc.com
+# Public pages are open to every crawler, including AI engines.
+# Working pages (portal, demo) are kept out — they are noindex plan/working pages.
+
+User-agent: *
+Allow: /
+Disallow: /portal.html
+Disallow: /demo.html
+
+# AI crawlers — explicitly welcome on the public pages
+User-agent: GPTBot
+Allow: /
+Disallow: /portal.html
+Disallow: /demo.html
+
+User-agent: OAI-SearchBot
+Allow: /
+Disallow: /portal.html
+Disallow: /demo.html
+
+User-agent: ChatGPT-User
+Allow: /
+Disallow: /portal.html
+Disallow: /demo.html
+
+User-agent: ClaudeBot
+Allow: /
+Disallow: /portal.html
+Disallow: /demo.html
+
+User-agent: PerplexityBot
+Allow: /
+Disallow: /portal.html
+Disallow: /demo.html
+
+User-agent: Google-Extended
+Allow: /
+Disallow: /portal.html
+Disallow: /demo.html
+
+Sitemap: https://johnliunyc.com/sitemap.xml
