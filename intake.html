@@ -191,7 +191,8 @@
       <div class="row"><strong>THE TURN</strong><span data-sum="turn_text">—</span></div>
       <div class="row"><strong>THE ONE LINE</strong><span data-sum="say_text">—</span></div>
       <div class="row"><strong>YOUR TASTE</strong><span data-sum="taste_line">—</span></div>
-      <p style="font-size:13px;color:#D6E4F7;margin-top:14px">Next: your founder interview is booked from this, your AI audit runs, and your website arrives in three designs built on exactly this. Demo note: in the live system this saves to your private record on send; here it stays on your phone.</p>
+      <p style="font-size:13px;color:#D6E4F7;margin-top:14px">Next: your founder interview is booked from this, your AI audit runs, and your website arrives in three designs built on exactly this.</p>
+      <p id="sendStatus" style="font-size:13.5px;color:#fff;margin-top:10px;font-weight:700"></p>
     </div>
   </div>
 
@@ -267,6 +268,35 @@
     var box = document.getElementById('sumBox');
     box.style.display = 'block';
     box.scrollIntoView({behavior:'smooth'});
+
+    // Send the intake by email (Resend, via /api/submit)
+    var status = document.getElementById('sendStatus');
+    var files = [];
+    document.querySelectorAll('input[type=file]').forEach(function(f){
+      if (f.files && f.files.length) { for (var i=0;i<f.files.length;i++) files.push(f.files[i].name); }
+    });
+    var payload = {
+      name: document.getElementById('f-name').value.trim(),
+      biz: document.getElementById('f-biz').value.trim(),
+      email: document.getElementById('f-email').value.trim(),
+      stage: picked('stage'),
+      built_chips: picked('built'), built_text: aval('built_text'),
+      turn_shape: picked('turn'), turn_text: aval('turn_text'),
+      serve_chips: picked('serve'), serve_text: aval('serve_text'),
+      say_text: aval('say_text'),
+      feel: picked('feel'), color: picked('color'), photo: picked('photo'),
+      headline: picked('headline'), cta: picked('cta'),
+      admire_text: aval('admire_text'), timeline_text: aval('timeline_text'),
+      files_note: files.length ? files.join(', ') + ' (file transfer lands with the server build; names captured here)' : 'none selected'
+    };
+    status.textContent = 'Sending your intake…';
+    fetch('/api/submit', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) })
+      .then(function(r){ return r.json().then(function(j){ return {ok:r.ok, j:j}; }); })
+      .then(function(out){
+        if (out.ok && out.j.ok) { status.innerHTML = '✓ <strong style="color:#fff">Sent.</strong> Your intake is in — and a copy is on its way to your email.'; }
+        else { status.textContent = 'The summary above is captured on this screen, but the email send did not go through — we will follow up from your interview booking.'; }
+      })
+      .catch(function(){ status.textContent = 'The summary above is captured on this screen, but the email send did not go through — we will follow up from your interview booking.'; });
   });
 </script>
 </body>
